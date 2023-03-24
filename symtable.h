@@ -9,7 +9,7 @@ returns a new SymTable with no bindings.
 If there is insufficient memory, it returns NULL. */
 SymTable_T SymTable_new(void);
 /* SymTable_free is a function that takes one argument, 
-a SymTable_T type oSymTable, and frees all memory occupied by SymTable_T. */
+a SymTable_T type oSymTable, and frees all memory occupied by the SymTable_T object. */
 void SymTable_free(SymTable_T oSymTable);
 /* SymTable_getLength is a function that takes one argument, a SymTable_T type oSymTable, 
 and returns the number of bindings in that SymTable_T as type size_t. */
