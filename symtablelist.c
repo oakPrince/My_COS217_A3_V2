@@ -2,7 +2,7 @@
 
 #include <assert.h>
 #include <stdlib.h>
-#include "stack.h"
+#include "symtable.h"
 
 /* Each key-value binding pair is stored in a Node. Nodes are linked with pointers to form a linked list.  */
 
@@ -30,7 +30,7 @@ struct SymTable
 SymTable_T SymTable_new(void)
 {
   SymTable_T oSymTable;
-  oSymTable = (SymTable_T)malloc(sizeof(struct List));
+  oSymTable = (SymTable_T)malloc(sizeof(struct SymTable));
   if (oSymTable == NULL)
     return NULL;
   oSymTable->first = NULL;
@@ -50,7 +50,7 @@ void SymTable_free(SymTable_T oSymTable)
        psCurrentNode != NULL;
        psCurrentNode = psNextNode)
   {
-    psNextNode = psCurrentNode->psNextNode;
+    psNextNode = psCurrentNode->next;
     free(psCurrentNode);
   }
 
@@ -72,11 +72,11 @@ size_t SymTable_getLength(SymTable_T oSymTable)
       psCurrentNode != NULL;
       psCurrentNode = psNextNode)
   {
-    if(psCurrentNode.key != NULL && psCurrentNode.value != NULL)
+    if(psCurrentNode->key != NULL && psCurrentNode->value != NULL)
     {
       numOfBindings++;
     }
-    psNextNode = psCurrentNode->psNextNode;
+    psNextNode = psCurrentNode->next;
   }
 
   return numOfBindings;
@@ -97,14 +97,14 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
        psCurrentNode != NULL;
        psCurrentNode = psNextNode)
   {
-    if(psCurrentNode.key == pcKey)
+    if(psCurrentNode->key == pcKey)
     {
       return 1;
     }
-    psNextNode = psCurrentNode->psNextNode;
+    psNextNode = psCurrentNode->next;
   }
 
-  psNewNode = (struct StackNode*)malloc(sizeof(struct StackNode));
+  psNewNode = (struct Node*)malloc(sizeof(struct Node));
   if (psNewNode == NULL)
   {
     return 0;
@@ -132,10 +132,10 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
        psCurrentNode != NULL;
        psCurrentNode = psNextNode)
   {
-    if(psCurrentNode.key == pcKey)
+    if(psCurrentNode->key == pcKey)
     {
-      oldVal = psCurrentNode.value;
-      psCurrentNode.value = pvValue;
+      oldVal = psCurrentNode->value;
+      psCurrentNode->value = pvValue;
       return oldVal;
     }
   }
@@ -146,7 +146,6 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
 {
   struct Node *psCurrentNode;
-  struct Node *psNextNode;
 
   assert(oSymTable != NULL);
 
@@ -154,9 +153,9 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
        psCurrentNode != NULL;
        psCurrentNode = psNextNode)
   {
-    if(psCurrentNode.key == pcKey)
+    if(psCurrentNode->key == pcKey)
     {
-      return  psCurrentNode.value;
+      return  psCurrentNode->value;
     }
   }
 
@@ -174,7 +173,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
        psCurrentNode != NULL;
        psCurrentNode = psNextNode)
   {
-     if(psCurrentNode.key == pcKey)
+     if(psCurrentNode->key == pcKey)
     {
       
       
@@ -196,7 +195,6 @@ void SymTable_map(SymTable_T oSymTable, void (*pfApply)(const char *pcKey, void 
        psCurrentNode != NULL;
        psCurrentNode = psCurrentNode->next)
   {
-    (*pfApply)((void*)psCurrentNode->value, (void*)pvExtra);
+    (*pfApply)((void*)psCurrentNode->key, (void*)psCurrentNode->value, (void*)pvExtra);
   }
 }
-
