@@ -100,7 +100,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   struct SymTableNode *newNode;
   char *defCopyofKey;
     
-  assert(oSymTable != NULL && pcKey != NULL );
+  assert(oSymTable != NULL || pcKey != NULL);
 
   for (current = oSymTable->first;
        current != NULL;
@@ -142,7 +142,7 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
      struct SymTableNode *current;
      struct SymTableNode *forward;
      
-     assert(oSymTable != NULL && pcKey != NULL);
+     assert(oSymTable != NULL ||  pcKey != NULL);
 
      for (current = oSymTable->first;
 	  current != NULL;
@@ -164,7 +164,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
   struct SymTableNode *current;
   struct SymTableNode *forward;
 
-  assert(oSymTable != NULL && pcKey != NULL );
+  assert(oSymTable != NULL || pcKey != NULL);
 
   for (current = oSymTable->first;
        current != NULL;
@@ -185,7 +185,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
   struct SymTableNode *current;
   struct SymTableNode *forward;
 
-  assert(oSymTable != NULL && pcKey != NULL );
+  assert(oSymTable != NULL || pcKey != NULL );
 
   for (current = oSymTable->first;
        current != NULL;
@@ -206,7 +206,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
  const void *holdVal;
  struct SymTableNode *forward;
 
- assert(oSymTable != NULL && pcKey != NULL);
+ assert(oSymTable != NULL || pcKey != NULL);
 
  if(SymTable_contains(oSymTable, pcKey) == 1)
  {
@@ -225,7 +225,7 @@ void Stack_map(SymTable_T  oSymTable, void(*pfApply)(const char *pcKey, void *pv
  struct SymTableNode *current;
  struct SymTableNode *forward;
 
- assert(oSymTable != NULL && pfApply != NULL);
+ assert(oSymTable != NULL || pfApply != NULL || pvExtra != NULL);
 
  for (current = oSymTable->first;
       current != NULL;
