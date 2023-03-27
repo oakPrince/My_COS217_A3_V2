@@ -220,7 +220,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
  return NULL;
 }
 
-void Stack_map(SymTable_T  oSymTable, void(*pfApply)(const char *pcKey, void *pvValue, void *pvExtra), const void *pvExtra)
+void SymTable_map(SymTable_T  oSymTable, void(*pfApply)(const char *pcKey, void *pvValue, void *pvExtra), const void *pvExtra)
 {
  struct SymTableNode *current;
  struct SymTableNode *forward;
