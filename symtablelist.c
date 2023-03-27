@@ -72,7 +72,7 @@ size_t SymTable_getLength(SymTable_T oSymTable)
       psCurrentNode != NULL;
       psCurrentNode = psNextNode)
   {
-    if(psCurrentNode->key != NULL && psCurrentNode->value != NULL)
+    if(psCurrentNode->key != NULL)
     {
       numOfBindings++;
     }
@@ -123,7 +123,6 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
 {
   struct Node *psCurrentNode;
   struct Node *psNextNode;
-  struct Node *psNewNode;
   int oldVal;
 
   assert(oSymTable != NULL);
@@ -135,8 +134,8 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
     if(psCurrentNode->key == pcKey)
     {
       oldVal = psCurrentNode->value;
-      psCurrentNode->value = pvValue;
-      return oldVal;
+      psCurrentNode->value = (int) pvValue;
+      return (int *)oldVal;
     }
   }
 
@@ -146,7 +145,8 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
 {
   struct Node *psCurrentNode;
-
+  struct Node *psNextNode;
+  
   assert(oSymTable != NULL);
 
   for (psCurrentNode = oSymTable->first;
@@ -155,7 +155,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
   {
     if(psCurrentNode->key == pcKey)
     {
-      return  psCurrentNode->value;
+      return (int *) psCurrentNode->value;
     }
   }
 
@@ -195,6 +195,6 @@ void SymTable_map(SymTable_T oSymTable, void (*pfApply)(const char *pcKey, void 
        psCurrentNode != NULL;
        psCurrentNode = psCurrentNode->next)
   {
-    (*pfApply)((void*)psCurrentNode->key, (void*)psCurrentNode->value, (void*)pvExtra);
+    (*pfApply)((void*)psCurrentNode->key, (int*)psCurrentNode->value, (void*)pvExtra);
   }
 }
