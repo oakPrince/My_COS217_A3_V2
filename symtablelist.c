@@ -1,6 +1,7 @@
 /* This code impleMents- a symbol table using a linked list  */
 
 #include <assert.h>
+#include <string.h>
 #include <stdlib.h>
 #include "symtable.h"
 
@@ -15,13 +16,15 @@ struct SymTableNode
   void *value;
 
   /* Pointer to next node */
-  struct Node *next;
+  struct SymTableNode *next;
 };
 
 /* Begins linkedlist by pointing to first node */
 struct SymTable
 {
-  struct Node *first;
+  struct SymTableNode *first;
+
+  size_t length;
 };
 
 /* Function returns empty symbol table is there is enought memeory. Otherwise,
@@ -115,7 +118,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
     return 0;
   }
   
-  char *defCopyofKey = malloc(sizeof(strlen(pcKey) + 1);
+  char *defCopyofKey = malloc(sizeof(strlen(pcKey) + 1));
   if (keyCopy == NULL)
   {
     free(newNode);
@@ -218,7 +221,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
  return NULL;
 }
 
-void Stack_map(Stack_T oSymTable, void(*pfApply)(const char *pcKey, void *pvValue, void *pvExtra), const void *pvExtra)
+void Stack_map(SymTable_T  oSymTable, void(*pfApply)(const char *pcKey, void *pvValue, void *pvExtra), const void *pvExtra)
 {
  struct SymTableNode *current;
  struct SymTableNode *forward;
