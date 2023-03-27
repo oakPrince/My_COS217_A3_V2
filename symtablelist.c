@@ -231,6 +231,7 @@ void Stack_map(SymTable_T  oSymTable, void(*pfApply)(const char *pcKey, void *pv
       current != NULL;
       current = forward)
  {
-   (*pfApply)((void*)current->key, (void*)current->value,  (void*)pvExtra);
+   (*pfApply)((void*)current->key, (void*)current->value, (void*)pvExtra);
+   forward = current->next;
  }
 }
