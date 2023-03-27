@@ -98,7 +98,8 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   struct SymTableNode *current;
   struct SymTableNode *forward;
   struct SymTableNode *newNode;
-  
+  char *defCopyofKey;
+    
   assert(oSymTable != NULL && pcKey != NULL );
 
   for (current = oSymTable->first;
@@ -118,8 +119,8 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
     return 0;
   }
   
-  char *defCopyofKey = malloc(sizeof(strlen(pcKey) + 1));
-  if (keyCopy == NULL)
+  defCopyofKey = malloc(sizeof(strlen(pcKey) + 1));
+  if (defCopyofKey == NULL)
   {
     free(newNode);
     return 0;
@@ -162,7 +163,6 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
 {
   struct SymTableNode *current;
   struct SymTableNode *forward;
-  struct SymTableNode *newNode;
 
   assert(oSymTable != NULL && pcKey != NULL );
 
@@ -184,7 +184,6 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
 {
   struct SymTableNode *current;
   struct SymTableNode *forward;
-  struct SymTableNode *newNode;
 
   assert(oSymTable != NULL && pcKey != NULL );
 
@@ -213,9 +212,9 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
  {
    holdVal = oSymTable->first->value;
    forward = oSymTable->first->next;
-   free(oSymTable->forward);
+   free(oSymTable->first);
    oSymTable->first = forward;
-   return holdVal;
+   return (void*) holdVal;
  }
 
  return NULL;
@@ -232,6 +231,6 @@ void Stack_map(SymTable_T  oSymTable, void(*pfApply)(const char *pcKey, void *pv
       current != NULL;
       current = forward)
  {
-   (*pfApply)((void*)current->key, (void*)pvExtra);
+   (*pfApply)((void*)current->key, (void*)current->value,  (void*)pvExtra);
  }
 }
