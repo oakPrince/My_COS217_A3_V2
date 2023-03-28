@@ -144,7 +144,7 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
   struct SymTableNode *forward;
   char *defCopyofKey;
 
-  assert(oSymTable != NULL)
+  assert(oSymTable != NULL);
   assert(pcKey != NULL);
   
   defCopyofKey = malloc(sizeof(strlen(pcKey) + 1));
