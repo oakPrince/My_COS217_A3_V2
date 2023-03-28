@@ -100,7 +100,8 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   struct SymTableNode *newNode;
   char *defCopyofKey;
     
-  assert(oSymTable != NULL || pcKey != NULL);
+  assert(oSymTable != NULL);
+  assert(pcKey != NULL);
 
   newNode = malloc(sizeof(struct SymTableNode));
   if (newNode == NULL)
@@ -143,7 +144,9 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
   struct SymTableNode *forward;
   char *defCopyofKey;
 
-  assert(oSymTable != NULL ||  pcKey != NULL);
+  assert(oSymTable != NULL)
+  assert(pcKey != NULL);
+  
   defCopyofKey = malloc(sizeof(strlen(pcKey) + 1));
   if (defCopyofKey == NULL)
   {
@@ -203,7 +206,8 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
   struct SymTableNode *forward;
   char *defCopyofKey;
   
-  assert(oSymTable != NULL || pcKey != NULL );
+  assert(oSymTable != NULL);
+  assert(pcKey != NULL );
 
   defCopyofKey = malloc(sizeof(strlen(pcKey) + 1));
   if (defCopyofKey == NULL)
@@ -231,7 +235,8 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
  const void *holdVal;
  struct SymTableNode *forward;
 
- assert(oSymTable != NULL || pcKey != NULL);
+ assert(oSymTable != NULL);
+ assert(pcKey != NULL);
 
  if(SymTable_contains(oSymTable, pcKey) == 1)
  {
@@ -250,7 +255,9 @@ void SymTable_map(SymTable_T  oSymTable, void(*pfApply)(const char *pcKey, void 
  struct SymTableNode *current;
  struct SymTableNode *forward;
 
- assert(oSymTable != NULL || pfApply != NULL || pvExtra != NULL);
+ assert(oSymTable != NULL);
+ assert(pfApply != NULL);
+ assert(pvExtra != NULL);
 
  for (current = oSymTable->first;
       current != NULL;
