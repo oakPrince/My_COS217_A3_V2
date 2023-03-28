@@ -110,7 +110,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
     return 0;
   }
 
-  defCopyofKey = malloc(strlen(pcKey) + 1);
+  defCopyofKey = (char*)malloc(strlen(pcKey) + 1);
   if (defCopyofKey == NULL)
   {
     free(newNode);
@@ -124,6 +124,8 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   {
     if(strcmp(current->key, defCopyofKey) == 0)
     {
+      free(defCopyofKey);
+      free(newNode);
       return 0;
     }
     forward  = current->next;
