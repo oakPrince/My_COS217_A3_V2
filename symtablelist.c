@@ -192,6 +192,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
     forward = current->next;
   }
 
+  free(defCopyofKey);
   return 0;
 }
 
