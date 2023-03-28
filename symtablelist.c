@@ -231,6 +231,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
  struct SymTableNode *previous;
  struct SymTableNode *current;
  struct SymTableNode *forward;
+ char *defCopyofKey;
 
  assert(oSymTable != NULL);
  assert(pcKey != NULL);
@@ -239,7 +240,6 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
  defCopyofKey = (char*)malloc(strlen(pcKey) + 1);
  if (defCopyofKey == NULL)
  {
-   free(newNode);
    return 0;
  }
  strcpy(defCopyofKey, pcKey);
