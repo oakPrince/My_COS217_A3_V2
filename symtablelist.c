@@ -56,7 +56,7 @@ void SymTable_free(SymTable_T oSymTable)
        current != NULL;
        current = forward)
   {
-    forward  = current->next;
+    forward = current->next;
     free((void*) current->key);
     free(current);
   }
@@ -102,11 +102,19 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
     
   assert(oSymTable != NULL || pcKey != NULL);
 
+  defCopyofKey = malloc(sizeof(strlen(pcKey) + 1));
+  if (defCopyofKey == NULL)
+  {
+    free(newNode);
+    return 0;
+  }
+  strcpy(defCopyofKey, pcKey);
+  
   for (current = oSymTable->first;
        current != NULL;
        current = forward)
   {
-    if(strcmp(current->key, pcKey) == 0)
+    if(strcmp(current->key, defCopyofKey) == 0)
     {
       return 0;
     }
@@ -118,15 +126,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   {
     return 0;
   }
-  
-  defCopyofKey = malloc(sizeof(strlen(pcKey) + 1));
-  if (defCopyofKey == NULL)
-  {
-    free(newNode);
-    return 0;
-  }
-  strcpy(defCopyofKey, pcKey);
-			      
+  			      
   newNode->key = defCopyofKey;
   newNode->value = (void*) pvValue;
   newNode->next = oSymTable->first;
@@ -166,11 +166,19 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
 
   assert(oSymTable != NULL || pcKey != NULL);
 
+  defCopyofKey = malloc(sizeof(strlen(pcKey) + 1));
+  if (defCopyofKey == NULL)
+  {
+    free(newNode);
+    return 0;
+  }
+  strcpy(defCopyofKey, pcKey);
+  
   for (current = oSymTable->first;
        current != NULL;
        current = forward)
   {
-    if(strcmp(current->key, pcKey) == 0)
+    if(strcmp(current->key, defCopyofKey) == 0)
     {
       return 1;
     }
@@ -187,11 +195,19 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
 
   assert(oSymTable != NULL || pcKey != NULL );
 
+  defCopyofKey = malloc(sizeof(strlen(pcKey) + 1));
+  if (defCopyofKey == NULL)
+  {
+    free(newNode);
+    return 0;
+  }
+  strcpy(defCopyofKey, pcKey);
+  
   for (current = oSymTable->first;
        current != NULL;
        current = forward)
   {
-    if(strcmp(current->key, pcKey) == 0)
+    if(strcmp(current->key, defCopyofKey) == 0)
     {
       void *foundVal = current->value;
       return foundVal;
