@@ -148,6 +148,7 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
   {
     if (strcmp(current->key, defCopyofKey) == 0)
     {
+      free(defCopyofKey);
       void *oldVal = current->value;
       current->value = (void*) pvValue;
       return oldVal;
@@ -184,6 +185,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
   {
     if(strcmp(current->key, defCopyofKey) == 0)
     {
+      free(defCopyofKey);
       return 1;
     }
     forward = current->next;
@@ -217,6 +219,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
   {
     if(strcmp(current->key, defCopyofKey) == 0)
     {
+      free(defCopyofKey);
       void *foundVal = current->value;
       return foundVal;
     }
@@ -253,6 +256,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
    {
      if(strcmp(current->key, defCopyofKey) == 0)
      {
+       free(defCopyofKey);
        holdVal = current->value;
        free(current);
        previous->next = forward;
