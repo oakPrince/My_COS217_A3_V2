@@ -87,7 +87,6 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
     
   assert(oSymTable != NULL);
   assert(pcKey != NULL);
-  assert(pvValue != NULL);
 
   newNode = malloc(sizeof(struct SymTableNode));
   if (newNode == NULL)
@@ -136,7 +135,6 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
 
   assert(oSymTable != NULL);
   assert(pcKey != NULL);
-  assert(pvValue != NULL);
   
   defCopyofKey = malloc(strlen(pcKey) + 1);
   if (defCopyofKey == NULL)
