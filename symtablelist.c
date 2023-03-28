@@ -102,6 +102,12 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
     
   assert(oSymTable != NULL || pcKey != NULL);
 
+  newNode = malloc(sizeof(struct SymTableNode));
+  if (newNode == NULL)
+  {
+    return 0;
+  }
+
   defCopyofKey = malloc(sizeof(strlen(pcKey) + 1));
   if (defCopyofKey == NULL)
   {
@@ -120,12 +126,6 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
     }
     forward  = current->next;
   }
-
-  newNode = malloc(sizeof(struct SymTableNode));
-  if (newNode == NULL)
-  {
-    return 0;
-  }
   			      
   newNode->key = defCopyofKey;
   newNode->value = (void*) pvValue;
@@ -138,38 +138,47 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
 /* SymTable_replace is a function that takes two arguements, a SymTable_T type oSymtable, a constant char pointer type pcKey, and a constant pointer type pvValue. If a bindinng with key pcKey is found in oSymtable, the value of the binding key-value pair is repalced and the old value is returned. Otherwise, oSymtalbe is left the same and the function returns NULL. */
 
 void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
-    {
-     struct SymTableNode *current;
-     struct SymTableNode *forward;
-     
-     assert(oSymTable != NULL ||  pcKey != NULL);
+{
+  struct SymTableNode *current;
+  struct SymTableNode *forward;
+  char *defCopyofKey;
 
-     for (current = oSymTable->first;
-	  current != NULL;
-	  current = forward)
-     {
-       if (strcmp(current->key, pcKey) == 0)
-       {
-	 void *oldVal = current->value;
-	 current->value = (void*) pvValue;
-	 return oldVal;
-       }
-       forward = current->next;
-     }
-     return NULL;
+  assert(oSymTable != NULL ||  pcKey != NULL);
+  defCopyofKey = malloc(sizeof(strlen(pcKey) + 1));
+  if (defCopyofKey == NULL)
+  {
+    return 0;
+  }
+  strcpy(defCopyofKey, pcKey);
+
+  for (current = oSymTable->first;
+       current != NULL;
+       current = forward)
+  {
+    if (strcmp(current->key, defCopyofKey) == 0)
+    {
+      void *oldVal = current->value;
+      current->value = (void*) pvValue;
+      return oldVal;
     }
+    forward = current->next;
+  }
+
+  return NULL;
+
+}
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
 {
   struct SymTableNode *current;
   struct SymTableNode *forward;
-
+  char *defCopyofKey;
+  
   assert(oSymTable != NULL || pcKey != NULL);
 
   defCopyofKey = malloc(sizeof(strlen(pcKey) + 1));
   if (defCopyofKey == NULL)
   {
-    free(newNode);
     return 0;
   }
   strcpy(defCopyofKey, pcKey);
@@ -192,13 +201,13 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
 {
   struct SymTableNode *current;
   struct SymTableNode *forward;
-
+  char *defCopyofKey;
+  
   assert(oSymTable != NULL || pcKey != NULL );
 
   defCopyofKey = malloc(sizeof(strlen(pcKey) + 1));
   if (defCopyofKey == NULL)
   {
-    free(newNode);
     return 0;
   }
   strcpy(defCopyofKey, pcKey);
