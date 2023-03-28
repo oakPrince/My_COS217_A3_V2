@@ -1,34 +1,31 @@
-/* This code impleMents- a symbol table using a linked list  */
+/* This code implements a symbol table using a linked list  */
 
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
 #include "symtable.h"
 
-/* Each key-value binding pair is stored in a Node. Nodes are linked with pointers to form a linked list.  */
+/* Each key-value binding pair is stored in a SymTableNode structure.
+ Nodes are linked with pointers to form a linked list. */
 
 struct SymTableNode
 {
-  /* Key */
+  /* Constant char pointer contains key */
   const char *key;
-  
-  /* Value */
+  /* Constant void pointer contains value */
   void *value;
-
-  /* Pointer to next node */
+  /* Structure points to next SymTableNode structure in linked list */
   struct SymTableNode *next;
 };
 
-/* Begins linkedlist by pointing to first node */
+/* SymTable structure begins linked list */
 struct SymTable
 {
+  /* Points to first SymTableNode in linked list */
   struct SymTableNode *first;
-
+  /* Length of linked list */
   size_t length;
 };
-
-/* Function returns empty symbol table is there is enought memeory. Otherwise,
-   it returns null. */
 
 SymTable_T SymTable_new(void)
 {
@@ -42,8 +39,6 @@ SymTable_T SymTable_new(void)
   oSymTable->first = NULL;
   return oSymTable;
 }
-
-/* Function takes one argument called oSymTable, a SymTable_T  type object, and frees all the memory occupied by the SymTable_T object. */
 
 void SymTable_free(SymTable_T oSymTable)
 {
@@ -65,8 +60,6 @@ void SymTable_free(SymTable_T oSymTable)
     
 }
 
-/* The function takes one arguement, oSymTable which is of type SymTable_T, and returns the number of bindings in oSymTable. */
-
 size_t SymTable_getLength(SymTable_T oSymTable)
 {
 
@@ -75,8 +68,6 @@ size_t SymTable_getLength(SymTable_T oSymTable)
   return oSymTable->length;
   
 }
-
-/* The function SymTable_put takes three arguments: SymTable_T type oSymTable, constnat char pointer type pcKey, and constant pointer type pvValue. OSymTalbe is searched for if it contains key pcKey. If it does the function returns 1. If not the the key-value pair is added and the function returns zero.  */
 
 int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
 {
@@ -88,12 +79,14 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   assert(oSymTable != NULL);
   assert(pcKey != NULL);
 
+  /* allocate memory for newNode structure */
   newNode = malloc(sizeof(struct SymTableNode));
   if (newNode == NULL)
   {
     return 0;
   }
 
+  /* create defensive copy */
   defCopyofKey = (char*)malloc(strlen(pcKey) + 1);
   if (defCopyofKey == NULL)
   {
@@ -102,7 +95,8 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   }
   strcpy(defCopyofKey, pcKey);
 
-  newNode->key = NULL;
+  /* search SymTable_T structure to see if there are any
+ bindings with keys that are the same as pcKey */
   
   for (current = oSymTable->first;
        current != NULL;
@@ -116,16 +110,16 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
     }
     forward = current->next;
   }
-  			      
+
+  /* add new node to the front of the linked list */     
   newNode->key = defCopyofKey;
   newNode->value = (void*) pvValue;
   newNode->next = oSymTable->first;
-  oSymTable->first = newNode;  
+  oSymTable->first = newNode;
+  oSymTable->length++;
   return 1;
   
 }
-
-/* SymTable_replace is a function that takes two arguements, a SymTable_T type oSymtable, a constant char pointer type pcKey, and a constant pointer type pvValue. If a bindinng with key pcKey is found in oSymtable, the value of the binding key-value pair is repalced and the old value is returned. Otherwise, oSymtalbe is left the same and the function returns NULL. */
 
 void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
 {
@@ -135,7 +129,8 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
 
   assert(oSymTable != NULL);
   assert(pcKey != NULL);
-  
+
+  /* create defensive copy */
   defCopyofKey = malloc(strlen(pcKey) + 1);
   if (defCopyofKey == NULL)
   {
@@ -143,6 +138,10 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
   }
   strcpy(defCopyofKey, pcKey);
 
+  /* Search SymTable_T structure to see if
+ it has a binding with a key matching pcKey.
+ If it does, change the value of that SymTableNode to pvValue.
+ Then, return the old value. */  
   for (current = oSymTable->first;
        current != NULL;
        current = forward)
@@ -169,13 +168,16 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
   assert(oSymTable != NULL);
   assert(pcKey != NULL);
 
+  /* create defensive copy */
   defCopyofKey = malloc(strlen(pcKey) + 1);
   if (defCopyofKey == NULL)
   {
     return 0;
   }
   strcpy(defCopyofKey, pcKey);
-  
+
+  /* search SymTable_T structure for any key-value pairs that have the key pcKey.
+ If there is a match, return 1. If not, return 0 */
   for (current = oSymTable->first;
        current != NULL;
        current = forward)
@@ -184,7 +186,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
     {
       return 1;
     }
-    forward  = current->next;
+    forward = current->next;
   }
 
   return 0;
@@ -199,13 +201,16 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
   assert(oSymTable != NULL);
   assert(pcKey != NULL);
 
+  /* create defensive copy */
   defCopyofKey = malloc(strlen(pcKey) + 1);
   if (defCopyofKey == NULL)
   {
     return 0;
   }
   strcpy(defCopyofKey, pcKey);
-  
+
+  /* Search SymTable_T structure for any bindings with pcKey as the key.
+     If there is a binding with pcKey, the value of that binding is returned. If not, NULL is returned. */  
   for (current = oSymTable->first;
        current != NULL;
        current = forward)
@@ -223,20 +228,40 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
 {
  const void *holdVal;
+ struct SymTableNode *previous;
+ struct SymTableNode *current;
  struct SymTableNode *forward;
 
  assert(oSymTable != NULL);
  assert(pcKey != NULL);
 
- if(SymTable_contains(oSymTable, pcKey) == 1)
+ /* create defensive copy */
+ defCopyofKey = (char*)malloc(strlen(pcKey) + 1);
+ if (defCopyofKey == NULL)
  {
-   holdVal = oSymTable->first->value;
-   forward = oSymTable->first->next;
-   free(oSymTable->first);
-   oSymTable->first = forward;
-   return (void*) holdVal;
+   free(newNode);
+   return 0;
  }
+ strcpy(defCopyofKey, pcKey);
 
+ /* If a binding in the SymTable_T strucutre has a key that matches pcKey,
+ the SymTableNode is removed from the SymTable strucutre and the binding's value is returned.
+ Otherwise, NULL is returned. */   
+ for (current = oSymTable->first;
+      current != NULL;
+      current = forward)
+   {
+     if(strcmp(current->key, defCopyofKey) == 0)
+     {
+       holdVal = current->value;
+       free(current);
+       previous->next = forward;
+       return (void*) holdVal;
+     }
+     forward = current->next;
+     previous = current;
+   }
+ 
  return NULL;
 }
 
@@ -248,6 +273,7 @@ void SymTable_map(SymTable_T  oSymTable, void(*pfApply)(const char *pcKey, void 
  assert(oSymTable != NULL);
  assert(pfApply != NULL);
 
+ /* applies pfApply function to every binding in SymTable_T structure */
  for (current = oSymTable->first;
       current != NULL;
       current = forward)
