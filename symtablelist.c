@@ -69,25 +69,10 @@ void SymTable_free(SymTable_T oSymTable)
 
 size_t SymTable_getLength(SymTable_T oSymTable)
 {
-  size_t numOfBindings = 0;
-  struct SymTableNode *current; 
-  struct SymTableNode *forward;
-    
+
   assert(oSymTable != NULL);
 
-  for(current = oSymTable->first;
-      current != NULL;
-      current = forward)
-  {
-    if(current->key != NULL)
-    {
-      numOfBindings++;
-    }
-    forward = current->next;
-    free(current);
-  }
-
-  return numOfBindings;
+  return oSymTable->length;
   
 }
 
@@ -130,7 +115,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
       free(newNode);
       return 0;
     }
-    forward  = current->next;
+    forward = current->next;
   }
   			      
   newNode->key = defCopyofKey;
