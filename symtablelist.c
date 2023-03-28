@@ -247,7 +247,6 @@ void SymTable_map(SymTable_T  oSymTable, void(*pfApply)(const char *pcKey, void 
 
  assert(oSymTable != NULL);
  assert(pfApply != NULL);
- assert(pvExtra != NULL);
 
  for (current = oSymTable->first;
       current != NULL;
