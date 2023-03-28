@@ -125,6 +125,7 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
 {
   struct SymTableNode *current;
   struct SymTableNode *forward;
+  void *oldVal;
   char *defCopyofKey;
 
   assert(oSymTable != NULL);
@@ -149,7 +150,7 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
     if (strcmp(current->key, defCopyofKey) == 0)
     {
       free(defCopyofKey);
-      void *oldVal = current->value;
+      oldVal = current->value;
       current->value = (void*) pvValue;
       return oldVal;
     }
@@ -199,7 +200,8 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
   struct SymTableNode *current;
   struct SymTableNode *forward;
   char *defCopyofKey;
-  
+  void *foundVal;
+    
   assert(oSymTable != NULL);
   assert(pcKey != NULL);
 
@@ -220,7 +222,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
     if(strcmp(current->key, defCopyofKey) == 0)
     {
       free(defCopyofKey);
-      void *foundVal = current->value;
+      foundVal = current->value;
       return foundVal;
     }
     forward = current->next;
