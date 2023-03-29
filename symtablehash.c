@@ -140,6 +140,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   newBinding->value = (void*) pvValue;
   newBinding->next = oSymTable->buckets[hash];
   oSymTable->buckets[hash]->newBinding;
+  oSymTable->length++;
   return 1;
 }
 
@@ -170,31 +171,179 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
     for (current = oSymTable->buckets[i]; current != NULL; current = forward)
     {
       if(strcmp(current->key, defCopyofKey) == 0)
-	free();
+      {
+	free(defCopyofKey);
+	oldVal = current->value;
+	current->value = (void*) pvValue;
+	return oldVal;
+      }
+      forward = current->next;
     }
+
+    free(defCopyofKey);
+    return NULL;
   }
 }
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
 {
+  struct Binding *current;
+  struct Binding *forward;
+  char *defCopyofKey;
+  
   assert(oSymTable != NULL):
   assert(pcKey != NULL);
+
+  /* create defensive copy */
+  defCopyofKey = malloc(strlen(pcKey) + 1);
+  if (defCopyofKey == NULL)
+  {
+    return 0;
+  }
+  strcpy(defCopyofKey, pcKey);
+
+  /* search SymTable_T structure for any key-value pairs that have the key pcKey.
+ If there is a match, return 1. If not, return 0 */
+  for (int i = 0; i < uBucketCount; i++)
+  {
+    for (current = oSymTable->buckets[uBucketCount];
+       current != NULL;
+       current = forward)
+      {
+	if(strcmp(current->key, defCopyofKey) == 0)
+	{
+	  free(defCopyofKey);
+	  return 1;
+	}
+	forward = current->next;
+      }
+  }
+  free(defCopyofKey);
+  return 0;
+ 
 }
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
 {
+  struct Binding *current;
+  struct Binding *forward;
+  char *defCopyofKey;
+  void *foundVal;
+  
   assert(oSymTable != NULL):
   assert(pcKey != NULL);
+
+  /* create defensive copy */
+  defCopyofKey = malloc(strlen(pcKey) + 1);
+  if (defCopyofKey == NULL)
+  {
+    return 0;
+  }
+  strcpy(defCopyofKey, pcKey);
+  
+  /* Search SymTable_T structure for any bindings with pcKey as the key.
+     If there is a binding with pcKey, the value of that binding is returned.
+     If not, NULL is returned. */
+  for (int i = 0; i < uBucketCount; i++)
+  {
+    for (current = oSymTable->buckets[uBucketCount];
+       current != NULL;
+       current = forward)
+      {
+        if(strcmp(current->key, defCopyofKey) == 0)
+        {
+          free(defCopyofKey);
+          foundVal = current->value;
+	  return foundVal;
+        }
+        forward = current->next;
+      }
+  }
+  free(defCopyofKey);
+  return NULL;
+
 }
 
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
 {
+  const void *holdVal;
+  struct SymTableNode *previous;
+  struct SymTableNode *current;
+  struct SymTableNode *forward;
+  char *defCopyofKey;
+
   assert(oSymTable != NULL):
   assert(pcKey != NULL);
+
+  /* create defensive copy */
+ defCopyofKey = (char*)malloc(strlen(pcKey) + 1);
+ if (defCopyofKey == NULL)
+ {
+   return 0;
+ }
+ strcpy(defCopyofKey, pcKey);
+
+ /* Base Case: if SymTable_T structure has only one SymTableNode */
+ if(strcmp(oSymTable->buckets[1]->key, defCopyofKey) == 0)
+ {
+   free(defCopyofKey);
+   holdVal = oSymTable->buckets[1]->value;
+   forward = oSymTable->buckets[1]->next;
+   free((void*) oSymTable->buckets[1]->key);
+   free(oSymTable->buckets[1]);
+   oSymTable->buckets[1] = forward;
+   oSymTable->length--;
+   return (void*) holdVal;
+ }
+
+ previous = oSymTable->first;
+ 
+ /* If a binding in the SymTable_T structure has a key that matches pcKey,
+ the SymTableNode is removed from the SymTable strucutre and the binding's value is returned.
+ Otherwise, NULL is returned. */
+ for (int i = 0; i < uBucketCount; i++)
+ {
+   for (current = oSymTable->buckets[uBucketCount];
+	current != NULL;
+	current = forward)
+   {
+     if(strcmp(current->key, defCopyofKey) == 0)
+     {
+       free(defCopyofKey);
+       holdVal = current->value;
+       forward = current->next;
+       previous->next = forward;
+       free((void*) current->key);
+       free(current);
+       oSymTable->length--;
+       return (void*) holdVal;
+     }
+     forward = current->next;
+     previous = current;
+   }
+ }
+ 
+ free(defCopyofKey);
+ return NULL;
 }
 
 void SymTable_map(SymTable_T oSymTable, void(*pfApply)(const char *pcKey, void *pvValue, void *pvExtra), const void *pvExtra)
 {
-  assert(oSymTable != NULL):
-  assert(pfApply != NULL);
+ struct SymTableNode *current;
+ struct SymTableNode *forward;
+
+ assert(oSymTable != NULL);
+ assert(pfApply != NULL);
+
+ /* applies pfApply function to every binding in SymTable_T structure */
+ for (int i = 0; i < uBucketCount; i++)
+ {
+   for (current = oSymTable->buckets[uBucketCount];
+	current != NULL;
+	current = forward)
+   {
+     (*pfApply)((void*)current->key, (void*)current->value, (void*)pvExtra);
+     forward = current->next;
+   }
+ }
 }
