@@ -26,7 +26,7 @@ struct Table
   /* Number of bindings is the length  */
   size_t length;
   /* struct Binding begins hash table */
-  struct Binding *buckets[initialBucketCount];
+  struct Binding **buckets;
 }
 
 /* Return a hash code for pcKey that is between 0 and uBucketCount-1,
@@ -53,6 +53,10 @@ SymTable_T SymTable_new(void)
   {
     return NULL;
   }
+
+  /* */
+  for (int i = 0; i <
+  oSymTable->buckets[i]
   oSymTable->length = 0;
   oSymTable->first
 }
