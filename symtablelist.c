@@ -261,6 +261,9 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
      oSymTable->length--;
      return (void*) holdVal;
    }
+
+   free(defCopyofKey);
+   
  }
  
  /* If a binding in the SymTable_T structure has a key that matches pcKey,
