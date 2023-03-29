@@ -75,7 +75,7 @@ SymTable_T SymTable_free(SymTable_T oSymTable)
   
   for (int i = 0; i < uBucketCount; i++)
   {
-    for (current = oSymTable->first; current != NULL; current = forward)
+    for (current = oSymTable->buckets[i]; current != NULL; current = forward)
     {
       forward = current->next;
       free((void*) current->key);
@@ -95,17 +95,84 @@ size_t SymTable_getLength(SymTable_T oSymTable)
 
 int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
 {
+  struct Binding *current;
+  struct Binding *forward;
+  struct Binding *newBinding;
+  char *defCopyofKey;
   
   assert(oSymTable != NULL):
   assert(pcKey != NULL);
 
-  
+  /* allocate memory for newBinding structure */
+  newBinding = malloc(sizeof(struct Binding));
+  if (newBinding = NULL)
+  {
+    return 0;
+  }
+
+  /* create defensive copy */
+  defCopyofKey = (char*)malloc(strlen(pcKey) + 1);
+  if (defCopyofKey == NULL)
+  {
+    free(newBinding);
+    return 0;
+  }
+  strcpy(defCopyofKey, pcKey);
+
+  /* search SymTable_T structure to see if there are
+ any bindings with keys that are the same as pcKey */
+
+  for (int i = 0; i < uBucketCount; i++)
+  {
+    for (current = oSymTable->buckets[i]; current != NULL; current = forward)
+    {
+      if(strcmp(current->key, defCopyofKey) == 0)
+      {
+	free(defCopyofkey);
+	free(newBinding);
+	return 0;
+      }
+      forward = current->next;
+    }
+  }
+  size_t hash = SymTable_hash(defCopyofKey, uBucketCount);
+  newBinding->key = defCopyofKey;
+  newBinding->value = (void*) pvValue;
+  newBinding->next = oSymTable->buckets[hash];
+  oSymTable->buckets[hash]->newBinding;
+  return 1;
 }
 
 void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
 {
+  struct Binding *current;
+  struct Binding *forward;
+  void *oldVal;
+  char *defCopyofKey;
+  
   assert(assert(oSymTable != NULL):
   assert(pcKey != NULL);
+
+  /* create defensive copy */
+  defCopyofKey = malloc(strlen(pcKey) + 1);
+  if (defCopyofKey == NULL)
+  {
+    return 0;
+  }
+  strcpy(defCopyofKey, pcKey);
+
+  /* Search SymTable_T structure to see if
+  it has a binding with a key matching pcKey.
+  If it does, change the value of that Binding to pvValue.
+  Then, return the old value. */
+  for (int i = 0; i < uBucketCount; i++)
+  {
+    for (current = oSymTable->buckets[i]; current != NULL; current = forward)
+    {
+      if(strcmp(current->key, defCopyofKey) == 0)
+	free();
+    }
+  }
 }
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
