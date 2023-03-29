@@ -245,7 +245,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
  /* Base Case: if SymTable_T structure is empty. */
  if (oSymTable->length == 0)
  {
-   return = NULL;
+   return NULL;
  }
  
  /* create defensive copy */
