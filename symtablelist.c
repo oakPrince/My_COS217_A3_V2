@@ -256,7 +256,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
    if(strcmp(oSymTable->first->key, defCopyofKey) == 0)
    {
      free(defCopyofKey);
-     holdVal = current->value;
+     holdVal = oSymTable->first->value;
      free(oSymTable->first);
      oSymTable->length--;
      return (void*) holdVal;
