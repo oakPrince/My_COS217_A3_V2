@@ -257,7 +257,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
    {
      free(defCopyofKey);
      holdVal = oSymTable->first->value;
-     free((void*) first->key);
+     free((void*) oSymTable-> first->key);
      free(oSymTable->first);
      oSymTable->length--;
      return (void*) holdVal;
