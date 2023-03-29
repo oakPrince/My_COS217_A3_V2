@@ -267,7 +267,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
    return NULL;
  }
 
- previous = oSymTamble->first;
+ previous = oSymTable->first;
  
  /* If a binding in the SymTable_T structure has a key that matches pcKey,
  the SymTableNode is removed from the SymTable strucutre and the binding's value is returned.
