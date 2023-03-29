@@ -257,13 +257,14 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
    {
      free(defCopyofKey);
      holdVal = oSymTable->first->value;
+     free((void*) first->key);
      free(oSymTable->first);
      oSymTable->length--;
      return (void*) holdVal;
    }
-
-   free(defCopyofKey);
    
+   free(defCopyofKey);
+   return NULL;
  }
  
  /* If a binding in the SymTable_T structure has a key that matches pcKey,
@@ -277,6 +278,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
      {
        free(defCopyofKey);
        holdVal = current->value;
+       free((void*) current->key);
        free(current);
        previous->next = forward;
        oSymTable->length--;
