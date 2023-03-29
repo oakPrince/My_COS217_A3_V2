@@ -1,4 +1,4 @@
-/* This code implements a symbol table using a linked list  */
+/* This code implements a symbol table using a linked list. */
 
 #include <assert.h>
 #include <string.h>
@@ -7,7 +7,6 @@
 
 /* Each key-value binding pair is stored in a SymTableNode structure.
  Nodes are linked with pointers to form a linked list. */
-
 struct SymTableNode
 {
   /* Constant char pointer contains key */
