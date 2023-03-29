@@ -157,6 +157,7 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
     forward = current->next;
   }
 
+  free(defCopyofKey);
   return NULL;
 
 }
@@ -194,6 +195,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
 
   free(defCopyofKey);
   return 0;
+  
 }
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
@@ -228,6 +230,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
     }
     forward = current->next;
   }
+  free(defCopyofKey);
   return NULL;
 }
 
@@ -295,6 +298,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
 
  free(defCopyofKey);
  return NULL;
+ 
 }
 
 void SymTable_map(SymTable_T  oSymTable, void(*pfApply)(const char *pcKey, void *pvValue, void *pvExtra), const void *pvExtra)
