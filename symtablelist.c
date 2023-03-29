@@ -242,6 +242,12 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
  assert(oSymTable != NULL);
  assert(pcKey != NULL);
 
+ /* Base Case: if SymTable_T structure is empty. */
+ if (oSymTable->length == 0)
+ {
+   return = NULL;
+ }
+ 
  /* create defensive copy */
  defCopyofKey = (char*)malloc(strlen(pcKey) + 1);
  if (defCopyofKey == NULL)
