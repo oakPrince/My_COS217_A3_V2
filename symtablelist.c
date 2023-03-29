@@ -251,13 +251,12 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
  strcpy(defCopyofKey, pcKey);
 
  /* Base Case: if SymTable_T structure has only one SymTableNode */
- if (SymTable->length == 1)
+ if (oSymTable->length == 1)
  {
    if(strcmp(oSymTable->first->key, defCopyofKey) == 0)
    {
      free(defCopyofKey);
      holdVal = current->value;
-     free(oSymTable->first->key);
      free(oSymTable->first);
      oSymTable->length--;
      return (void*) holdVal;
@@ -275,7 +274,6 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
      {
        free(defCopyofKey);
        holdVal = current->value;
-       free(current->key);
        free(current);
        previous->next = forward;
        oSymTable->length--;
