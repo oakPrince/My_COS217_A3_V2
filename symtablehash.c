@@ -14,7 +14,7 @@ struct SymTable_Node
   /* Values stored in void pointer. */
   void *value;
   /* Structure points to next binding in hash table. */
-  struct SymTable_Node  *next;
+  struct SymTable_Node *next;
 };
 
 /* Begins hash table */
@@ -25,7 +25,7 @@ struct SymTable
   /* struct Binding begins hash table */
   struct SymTable_Node **buckets;
   /* Number of buckets in the Symtable  */
-  size_t numOfBuckets;
+  size_t numOfBuckets = 509;
 };
 
 /* Return a hash code for pcKey that is between 0 and uBucketCount-1,
@@ -56,8 +56,7 @@ SymTable_T SymTable_new(void)
   }
 
   oSymTable->length = 0;
-  oSymTable->numOfBuckets = 509;
-  oSymTable->buckets = (SymTable_Node**)malloc(sizeof(SymTable_Node*) * numOfBuckets);
+  oSymTable->buckets = (SymTable_Node*)malloc(sizeof(SymTable_Node*) * numOfBuckets);
   if (oSymTable->buckets == NULL)
   {
     free(oSymTable);
@@ -74,15 +73,15 @@ SymTable_T SymTable_new(void)
 
 void SymTable_free(SymTable_T oSymTable)
 {
-  SymTable_Node *current;
-  SymTable_Node *forward;
+  struct SymTable_Node *current;
+  struct SymTable_Node *forward;
   size_t i;
 
   assert(oSymTable != NULL);
 
   for (i = 0; i < oSymTable->numOfBuckets; i++)
   {
-    for (current = oSymTable->buckets[i];
+    for (current = oSymTable->buckets[i]->first;
 	 current != NULL;
 	 current = forward)
     {
@@ -105,9 +104,9 @@ size_t SymTable_getLength(SymTable_T oSymTable)
 
 int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
 {
-  SymTable_Node *current;
-  SymTable_Node *forward;
-  SymTable_Node *newNode;
+  struct SymTable_Node *current;
+  struct SymTable_Node *forward;
+  struct SymTable_Node *newNode;
   char *defCopyofKey;
   size_t index;
 
