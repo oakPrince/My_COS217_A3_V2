@@ -291,35 +291,24 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
 {
   struct SymTable_Node *current;
   struct SymTable_Node *forward;
-  char *defCopyofKey;
   void *foundVal;
   size_t index;
   
   assert(oSymTable != NULL);
   assert(pcKey != NULL);
 
-  /* create defensive copy */
-  defCopyofKey = malloc(strlen(pcKey) + 1);
-  if (defCopyofKey == NULL)
-  {
-    return 0;
-  }
-  strcpy(defCopyofKey, pcKey);
-
-  index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
+  index = SymTable_hash(pcKey, oSymTable->numOfBuckets);
   current = oSymTable->buckets[index];
   while (current != NULL)
   {
-    if(strcmp(current->key, defCopyofKey) == 0)
+    if(strcmp(current->key, pcKey) == 0)
     {
-      free(defCopyofKey);
       foundVal = current->value;
       return foundVal;
     }
     forward = current->next;
     current = forward;
   }
-  free(defCopyofKey);
   return NULL;
 
 }
@@ -330,7 +319,6 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
   struct SymTable_Node *previous;
   struct SymTable_Node *current;
   struct SymTable_Node *forward;
-  char *defCopyofKey;
   size_t index;
 
   assert(oSymTable != NULL);
