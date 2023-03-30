@@ -346,6 +346,13 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
 
  index = SymTable_hash(defCopyofKey, oSymTable-> numOfBuckets);
  current = oSymTable->buckets[index];
+
+ if(current == NULL)
+ {
+   free(defCopyofKey);
+   return 0;
+ }
+
  
  /* Base Case: if SymTable_T structure has only one SymTableNode */
  if(strcmp(current->key, defCopyofKey) == 0)
@@ -355,6 +362,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
    forward = current->next;
    free((void*) current->key);
    free(current);
+   oSymTable->buckets[index] = forward;
    oSymTable->length--;
    return (void*) holdVal;
  }
