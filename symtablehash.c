@@ -153,6 +153,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
 {
   struct SymTable_Node *current;
   struct SymTable_Node *forward;
+  struct SymTable_Node *end;
   struct SymTable_Node *newNode;
   char *defCopyofKey;
   size_t index;
@@ -199,12 +200,13 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
       return 0;
     }
     forward = current->next;
+    end = current;
     current = forward;
   }
       
   newNode->key = defCopyofKey;
   newNode->value = (void*) pvValue;
-  current->next = newNode;
+  end->next = newNode;
   oSymTable->length++;
   return 1;
   
