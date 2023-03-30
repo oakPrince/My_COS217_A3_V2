@@ -321,9 +321,9 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
 {
   const void *holdVal;
-  struct SymTableNode *previous;
-  struct SymTableNode *current;
-  struct SymTableNode *forward;
+  struct SymTable_Node *previous;
+  struct SymTable_Node *current;
+  struct SymTable_Node *forward;
   char *defCopyofKey;
   size_t index;
 
