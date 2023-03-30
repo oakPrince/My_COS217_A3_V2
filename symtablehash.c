@@ -240,6 +240,7 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
       return oldVal;
     }
     forward = current->next;
+    current = forward;
   }
 
   free(defCopyofKey);
