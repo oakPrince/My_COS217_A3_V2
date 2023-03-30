@@ -416,12 +416,3 @@ void SymTable_map(SymTable_T oSymTable, void(*pfApply)(const char *pcKey, void *
  }
  
 }
-
-
-
-
-
-
-
-
-
