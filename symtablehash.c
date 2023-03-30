@@ -49,7 +49,7 @@ SymTable_T SymTable_new(void)
   SymTable_T oSymTable;
   size_t i;
   
-  oSymTable = (SymTable_T)calloc(sizeof(struct SymTable));
+  oSymTable = (SymTable_T)malloc(sizeof(struct SymTable));
   if (oSymTable == NULL)
   {
     return NULL;
@@ -57,7 +57,7 @@ SymTable_T SymTable_new(void)
 
   oSymTable->length = 0;
   oSymTable->numOfBuckets = 509;
-  oSymTable->buckets = calloc(sizeof(struct SymTable_Node*) * numOfBuckets);
+  oSymTable->buckets = calloc(oSymTable->numOfBuckets, sizeof(struct SymTable_Node*));
   if (oSymTable->buckets == NULL)
   {
     free(oSymTable);
@@ -77,18 +77,17 @@ void SymTable_free(SymTable_T oSymTable)
   struct SymTable_Node *current;
   struct SymTable_Node *forward;
   size_t i;
-  size_t j;
 
   assert(oSymTable != NULL);
 
   for (i = 0; i < oSymTable->numOfBuckets; i++)
   {
-    current = oSymTable->buckets[i]
-    for (j = 0; current != NULL; j++)
+    current = oSymTable->buckets[i];
+    while (current != NULL)
     {
-     current = current[j];
-     free((void*) current->key);
-     free(current);
+      forward = current->next;
+      free(current->key);
+      free(current);
     }
   }
 
