@@ -86,8 +86,9 @@ void SymTable_free(SymTable_T oSymTable)
     while (current != NULL)
     {
       forward = current->next;
-      free(current->key);
+      free((void*) current->key);
       free(current);
+      current = forward;
     }
   }
 
