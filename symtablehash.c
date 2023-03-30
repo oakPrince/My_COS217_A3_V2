@@ -319,6 +319,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
     forward = current->next;
     current = forward;
   }
+  free(defCopyofKey);
   return NULL;
 
 }
