@@ -53,18 +53,19 @@ SymTable_T SymTable_expand(SymTable_T oSymTable)
   struct SymTable_Node *forward;
   size_t newIndex;
   char defCopyofKey;
-
-  /* create defensive copy */
-  defCopyofKey = (char*)malloc(strlen(pcKey) + 1);
-  if (defCopyofKey == NULL)
-  {
-    free(newNode);
-    return 0;
-  }
   
   for (int i = 0; i < oSymTable->numOfBuckets; i++)
   {
     current = oSymTable->buckets[i];
+
+    /* create defensive copy */
+    defCopyofKey = (char*)malloc(strlen(current->key) + 1);
+    if (defCopyofKey == NULL)
+    {
+      free(newNode);
+      return 0;
+    }
+    
     while(current != NULL)
     {
       forward = current->next;
