@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include "symtable.h"
 
+static const size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 32749, 65521}; 
+
 /* Each key-value binding pair is stored in a Binding structure.
  Bindings  are linked with pointers to form a linked list. */
 struct SymTable_Node
@@ -104,7 +106,7 @@ SymTable_T SymTable_new(void)
   }
 
   oSymTable->length = 0;
-  oSymTable->numOfBuckets = 509;
+  oSymTable->numOfBuckets = sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);
   oSymTable->buckets = calloc(oSymTable->numOfBuckets, sizeof(struct SymTable_Node*));
   if (oSymTable->buckets == NULL)
   {
@@ -159,8 +161,6 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   struct SymTable_Node *newNode;
   char *defCopyofKey;
   size_t index;
-  size_t oldNumOfBuckets;
-  size_t i;
 
   assert(oSymTable != NULL);
   assert(pcKey != NULL);
@@ -182,7 +182,6 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   strcpy(defCopyofKey, pcKey);
  
   index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
-  oldNumOfBuckets = oSymTable->numOfBuckets;
 
   /* expansion check 
   if (oSymTable->numOfBuckets < index)
@@ -194,7 +193,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
     oSymTable = SymTable_expand(oSymTable);
   } */
 
-  current = oSymTable->buckets[index];    
+  current = oSymTable->buckets[index];
   while (current != NULL)
   {
     if(strcmp(current->key, defCopyofKey) == 0)
@@ -207,12 +206,12 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
     end = current;
     current = forward;
   }
-      
+  
   newNode->key = defCopyofKey;
   newNode->value = (void*) pvValue;
+  newNode->next = end->next;
   end->next = newNode;
   oSymTable->length++;
-  free(current);
   return 1;
   
 }
