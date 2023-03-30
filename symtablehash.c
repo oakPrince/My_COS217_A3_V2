@@ -47,6 +47,7 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 /* SymTable_expand takes a SymTable_T type oSymTable and doubles its size.  */
 SymTable_T SymTable_expand(SymTable_T oSymTable)
 {
+  SymTable_T newSymTable;
   size_t doubleNumOfBuckets = oSymTable->numOfBuckets * 2;
   struct SymTable_Node **extra_buckets = calloc(doubleNumOfBuckets, sizeof(struct SymTable_Node*));
   struct SymTable_Node *current;
@@ -76,8 +77,8 @@ SymTable_T SymTable_expand(SymTable_T oSymTable)
     }
   }
 
-  SymTable_T newSymTable = SymTable_new();
-  newSymTable->buckets = current;
+  newSymTable = SymTable_new();
+  newSymTable->buckets = extra_buckets;
   newSymTable->length = oSymTable->length;
   newSymTable->numOfBuckets = doubleNumOfBuckets;
   free((void*) current->key);
