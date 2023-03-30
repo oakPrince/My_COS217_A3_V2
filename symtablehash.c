@@ -44,6 +44,47 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
    return uHash % uBucketCount;
 }
 
+/* SymTable_expand takes a SymTable_T type oSymTable and doubles its size.  */
+SymTable_T SymTable_expand(SymTable_T oSymTable)
+{
+  size_t  doubleNumOfBuckets = oSymTable->numOfBuckets * 2;
+  SymTable_Node **extra_buckets = calloc(doubleSize, sizeof(struct SymTable_Node*));
+  SymTable_Node *current;
+  SymTable_Node *forward;
+  size_t newIndex;
+
+  /* create defensive copy */
+  defCopyofKey = (char*)malloc(strlen(pcKey) + 1);
+  if (defCopyofKey == NULL)
+  {
+    free(newNode);
+    return 0;
+  }
+  
+  for (int i = 0; i < oSymTable->numOfBuckets; i++)
+  {
+    current = oSymTable->buckets[i];
+    while(current != NULL)
+    {
+      forward = current->next;
+      strcpy(defCopyofKey, current->key);
+      newIndex = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
+      current->next = extra_buckets[newIndex];
+      extra_buckets[newIndex] = current;
+    }
+  }
+
+  newSymTable = SymTable_new();
+  newSymTable->buckets = current;
+  newSymTable->length = oSymTable->length;
+  newSymTable->numOfBuckets = doubleNumOfBuckets;
+  free((void*) current->key);
+  free(current);
+  free(forward);
+  free(defCopyofKey);
+  SymTable_free(oSymTable);
+}
+
 SymTable_T SymTable_new(void)
 {
   SymTable_T oSymTable;
@@ -132,9 +173,19 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   strcpy(defCopyofKey, pcKey);
  
   index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
-  for (current = oSymTable->buckets[index]->first;
-       current != NULL;
-       current = forward)
+
+  /* expansion check */
+  if (numOfBuckets < index)
+  {
+    if (index > 65521)
+    {
+      return;
+    }	
+    oSymTable = SymTable_expand(oSymTable);
+  }
+
+  current = oSymTable->buckets[index];    
+  while (current != NULL)
   {
     if(strcmp(current->key, defCopyofKey) == 0)
     {
@@ -143,24 +194,15 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
       return 0;
     }
     forward = current->next;
+    current = forward;
   }
+      
   newNode->key = defCopyofKey;
   newNode->value = (void*) pvValue;
-  newNode->next = oSymTable->buckets[index]->first;
-  oSymTable->buckets[index]->first = newNode;
+  current->next = newNode;
   oSymTable->length++;
   return 1;
-
-  /* expansion */
-  if (index % 509 > 0)
-  {
-    oSymTable->numOfBuckets = oSymTable->numOfBuckets * 2;
-    if (oSymTable->numOfBuckets > 65521)
-    {
-      return 0;
-    }
-    oSymTable->buckets = (SymTable_Node**)malloc(sizeof(SymTable_Node**) * numOfBuckets);
-  }
+  
 }
 
 void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
