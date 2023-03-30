@@ -354,7 +354,6 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
  {
    if(strcmp(current->key, pcKey) == 0)
    {
-     free(defCopyofKey);
      holdVal = current->value;
      forward = current->next;
      previous->next = forward;
