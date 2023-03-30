@@ -301,7 +301,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
   
   for(current = oSymTable->buckets[index];
       current != NULL;
-      current = forward);
+      current = forward)
   {
     if(strcmp(current->key, pcKey) == 0)
     {
