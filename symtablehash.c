@@ -386,30 +386,19 @@ void SymTable_map(SymTable_T oSymTable, void(*pfApply)(const char *pcKey, void *
  struct SymTableNode *current;
  struct SymTableNode *forward;
  size_t i;
- char *defCopyofKey;
- size_t index;
- 
- 
- /* create defensive copy */
- defCopyofKey = (char*)malloc(strlen(pcKey) + 1);
- if (defCopyofKey == NULL)
- {
-   return 0;
- }
- strcpy(defCopyofKey, pcKey);
  
  assert(oSymTable != NULL);
  assert(pfApply != NULL);
 
- index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
- current = oSymTable->buckets[index];
- while (current != NULL)
+ for (i = 0; i < oSymTable->numOfBuckets; i++)
  {
-   (*pfApply)((void*)current->key, (void*)current->value, (void*)pvExtra);
-   forward = current->next;
-   current = forward;
- }
-
+   current = oSymTable->buckets[i];
+   while (current != NULL)
+   {
+     (*pfApply)((void*)current->key, (void*)current->value, (void*)pvExtra);
+     forward = current->next;
+     current = forward;
+   }
 }
  
 
