@@ -57,7 +57,7 @@ SymTable_T SymTable_new(void)
 
   oSymTable->length = 0;
   oSymTable->numOfBuckets = 509;
-  oSymTable->buckets = (SymTable_Node**)malloc(sizeof(SymTable_Node*) * numOfBuckets);
+  oSymTable->buckets = (SymTable_Node**)malloc(sizeof(SymTable_Node**) * numOfBuckets);
   if (oSymTable->buckets == NULL)
   {
     free(oSymTable);
@@ -116,7 +116,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   assert(pcKey != NULL);
 
   /* allocate memory for newNode structure */
-  newNode = malloc(sizeof(struct SymTableNode));
+  newNode = malloc(sizeof(struct SymTable_Node));
   if (newNode == NULL)
   {
     return 0;
@@ -136,7 +136,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
        current != NULL;
        current = forward)
   {
-    if(strcmp(current->key), defCopyofKey) == 0)
+    if(strcmp(current->key, defCopyofKey) == 0)
     {
       free(defCopyofKey);
       free(newNode);
@@ -147,20 +147,21 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   newNode->key = defCopyofKey;
   newNode->value = (void*) pvValue;
   newNode->next = oSymTable->buckets[index]->first;
-  newHash->first = newNode;
+  oSymTable->buckets[index]->first = newNode;
   oSymTable->length++;
   return 1;
 
   /* expansion */
   if (index % 509 > 0)
   {
-    oSymTable->numOfBuckets = numOfBuckets * 2;
+    oSymTable->numOfBuckets = oSymTable-> numOfBuckets * 2;
     if (numOfBuckets > 65521)
     {
       return 0;
     }
     oSymTable->buckets = (SymTable_Node**)malloc(sizeof(SymTable_Node*) * numOfBuckets);
   }
+}
 
 void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
 {
@@ -186,7 +187,7 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
        current != NULL;
        current = forward)
   {
-    if(current->key, defCopyofKey);
+    if(strcmp(current->key, defCopyofKey));
     {
       free(defCopyofKey);
       oldVal = current->value;
@@ -279,7 +280,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
   char *defCopyofKey;
   size_t index;
 
-  assert(oSymTable != NULL):
+  assert(oSymTable != NULL);
   assert(pcKey != NULL);
 
   /* create defensive copy */
@@ -349,6 +350,7 @@ void SymTable_map(SymTable_T oSymTable, void(*pfApply)(const char *pcKey, void *
 {
  struct SymTableNode *current;
  struct SymTableNode *forward;
+ size_t i;
 
  assert(oSymTable != NULL);
  assert(pfApply != NULL);
