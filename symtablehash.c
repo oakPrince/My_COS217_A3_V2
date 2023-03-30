@@ -228,12 +228,11 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
   }
   strcpy(defCopyofKey, pcKey);
 
-  index = SymTable_hash(defCopyofKey,oSymTable-> numOfBuckets);
-  for (current = oSymTable->buckets[index]->first;
-       current != NULL;
-       current = forward)
+  index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
+  current = oSymTable->buckets[index];
+  while (current != NULL)
   {
-    if(strcmp(current->key, defCopyofKey))
+    if(strcmp(current->key, defCopyofKey) == 0)
     {
       free(defCopyofKey);
       oldVal = current->value;
