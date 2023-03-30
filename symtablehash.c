@@ -87,6 +87,7 @@ SymTable_T SymTable_expand(SymTable_T oSymTable)
   free(defCopyofKey);
   free(extra_buckets);
   SymTable_free(oSymTable);
+  return newSymTable;
 }
 
 SymTable_T SymTable_new(void)
@@ -338,58 +339,46 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
  strcpy(defCopyofKey, pcKey);
 
  index = SymTable_hash(defCopyofKey, oSymTable-> numOfBuckets);
+ current = oSymTable->buckets[index];
  
  /* Base Case: if SymTable_T structure has only one SymTableNode */
- if(strcmp(oSymTable->buckets[index]->first->key, defCopyofKey) == 0)
+ if(strcmp(current->key, defCopyofKey) == 0)
  {
    free(defCopyofKey);
-   holdVal = oSymTable->buckets[index]->value;
-   forward = oSymTable->buckets[index]->next;
-   free((void*) oSymTable->buckets[index]->key);
-   free(oSymTable->buckets[index]);
-   oSymTable->buckets[index] = forward;
+   holdVal = current->value;
+   forward = current->next;
+   free((void*) current->key);
+   free(current);
    oSymTable->length--;
    return (void*) holdVal;
  }
 
- previous = oSymTable->first;
+ previous = oSymTable->buckets[index];
  
  /* If a binding in the SymTable_T structure has a key that matches pcKey,
  the SymTableNode is removed from the SymTable strucutre and the binding's value is returned.
  Otherwise, NULL is returned. */
-   for (current = oSymTable->buckets[index]->first;
-	current != NULL;
-	current = forward)
+ while (current != NULL)
+ {
+   if(strcmp(current->key, defCopyofKey) == 0)
    {
-     if(strcmp(current->key, defCopyofKey) == 0)
-     {
-       free(defCopyofKey);
-       holdVal = current->value;
-       forward = current->next;
-       previous->next = forward;
-       free((void*) current->key);
-       free(current);
-       oSymTable->length--;
-       return (void*) holdVal;
-     }
+     free(defCopyofKey);
+     holdVal = current->value;
      forward = current->next;
-     previous = current;
+     previous->next = forward;
+     free((void*) current->key);
+     free(current);
+     oSymTable->length--;
+     return (void*) holdVal;
    }
+   forward = current->next;
+   previous = current;
+   current = forward;
  }
- 
+
  free(defCopyofKey);
  return NULL;
 
- /* shrinking */
- if (index % 509 < 0)
- {
-   oSymTable->numOfBuckets = numOfBuckets * 2;
-   if (numOfBuckets < 509)
-   {
-     return 0;
-   }
-   oSymTable->buckets = (SymTable_Node**)malloc(sizeof(SymTable_Node**) * numOfBuckets);
- }
 }
 
 void SymTable_map(SymTable_T oSymTable, void(*pfApply)(const char *pcKey, void *pvValue, void *pvExtra), const void *pvExtra)
@@ -400,16 +389,14 @@ void SymTable_map(SymTable_T oSymTable, void(*pfApply)(const char *pcKey, void *
 
  assert(oSymTable != NULL);
  assert(pfApply != NULL);
- for (i = 0; i < oSymTable->numOfBuckets; i++)
- {
-   for (current = oSymTable->buckets[i];
-       current != NULL;
-       current = forward)
-   {
-     
+
+  index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
+  current = oSymTable->buckets[index];
+  while (current != NULL)
+  {
     (*pfApply)((void*)current->key, (void*)current->value, (void*)pvExtra);
     forward = current->next;
-    
+    current = forward;
    }
  }
  
