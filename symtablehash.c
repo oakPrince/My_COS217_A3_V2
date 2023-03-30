@@ -209,7 +209,8 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   
   newNode->key = defCopyofKey;
   newNode->value = (void*) pvValue;
-  end->next = newNode;
+  newNode->next = oSymTable->buckets[index];
+  oSymTable->buckets[index] = newNode;
   oSymTable->length++;
   return 1;
   
