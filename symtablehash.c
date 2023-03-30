@@ -1,4 +1,4 @@
-/* This code implements a symbol table using a hash table. */
+/* This code implements a symbol table using a hash table. The hash table does not expand however it does have commented code for an attempt at an expanding hash table. */
 
 #include <assert.h>
 #include <string.h>
@@ -51,7 +51,7 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 SymTable_T SymTable_expand(SymTable_T oSymTable)
 {
   SymTable_T newSymTable;
-  size_t doubleNumOfBuckets = oSymTable->numOfBuckets * 2;
+  size_t doubleNumOfBuckets = oSymTable->numOfBuckets++;
   struct SymTable_Node **extra_buckets = calloc(doubleNumOfBuckets, sizeof(struct SymTable_Node*));
   struct SymTable_Node *current;
   struct SymTable_Node *forward;
