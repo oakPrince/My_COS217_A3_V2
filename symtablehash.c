@@ -266,9 +266,8 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
   strcpy(defCopyofKey, pcKey);
 
   index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
-  for (current = oSymTable->buckets[index]->first;
-       current != NULL;
-       current = forward)
+  current = oSymTable->buckets[index];
+  while (current != NULL)
   {
     if(strcmp(current->key, defCopyofKey) == 0)
     {
@@ -276,6 +275,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
       return 1;
     }
     forward = current->next;
+    current = forward;
   }
   free(defCopyofKey);
   return 0;
