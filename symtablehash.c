@@ -52,6 +52,7 @@ SymTable_T SymTable_expand(SymTable_T oSymTable)
   struct SymTable_Node *current;
   struct SymTable_Node *forward;
   size_t newIndex;
+  char defCopyofKey;
 
   /* create defensive copy */
   defCopyofKey = (char*)malloc(strlen(pcKey) + 1);
@@ -82,6 +83,7 @@ SymTable_T SymTable_expand(SymTable_T oSymTable)
   free(current);
   free(forward);
   free(defCopyofKey);
+  free(extra_buckets);
   SymTable_free(oSymTable);
 }
 
