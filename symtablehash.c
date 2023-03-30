@@ -298,17 +298,17 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
   assert(pcKey != NULL);
 
   index = SymTable_hash(pcKey, oSymTable->numOfBuckets);
-  current = oSymTable->buckets[index];
-  while (current != NULL)
+  
+  for(current = oSymTable->buckets[index];
+      current != NULL;
+      current = forward);
   {
     if(strcmp(current->key, pcKey) == 0)
     {
       foundVal = current->value;
-      free(current);
       return foundVal;
     }
     forward = current->next;
-    current = forward;
   }
   return NULL;
 
