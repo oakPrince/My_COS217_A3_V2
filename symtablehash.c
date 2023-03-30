@@ -383,8 +383,8 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
 
 void SymTable_map(SymTable_T oSymTable, void(*pfApply)(const char *pcKey, void *pvValue, void *pvExtra), const void *pvExtra)
 {
- struct SymTableNode *current;
- struct SymTableNode *forward;
+ struct SymTable_Node *current;
+ struct SymTable_Node *forward;
  size_t i;
  
  assert(oSymTable != NULL);
@@ -399,8 +399,9 @@ void SymTable_map(SymTable_T oSymTable, void(*pfApply)(const char *pcKey, void *
      forward = current->next;
      current = forward;
    }
-}
+ }
  
+}
 
 
 
