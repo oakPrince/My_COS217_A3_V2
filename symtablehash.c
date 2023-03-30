@@ -179,11 +179,11 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
 
   /* expansion check */
-  if (numOfBuckets < index)
+  if (oSymTable->numOfBuckets < index)
   {
     if (index > 65521)
     {
-      return;
+      return 0;
     }	
     oSymTable = SymTable_expand(oSymTable);
   }
