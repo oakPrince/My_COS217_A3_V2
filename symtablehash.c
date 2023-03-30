@@ -185,7 +185,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
   oldNumOfBuckets = oSymTable->numOfBuckets;
 
-  for (i = 0; i < oSymTable->oldNumofBuckets; i++)
+  for (i = 0; i < oldNumofBuckets; i++)
   {
     if (i == index)
     {
