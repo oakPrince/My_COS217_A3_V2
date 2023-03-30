@@ -44,7 +44,7 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
    return uHash % uBucketCount;
 }
 
-/* SymTable_expand takes a SymTable_T type oSymTable and doubles its size.  */
+/* SymTable_expand takes a SymTable_T type oSymTable and doubles its size. 
 SymTable_T SymTable_expand(SymTable_T oSymTable)
 {
   SymTable_T newSymTable;
@@ -60,7 +60,7 @@ SymTable_T SymTable_expand(SymTable_T oSymTable)
   {
     current = oSymTable->buckets[i];
 
-    /* create defensive copy */
+    create defensive copy
     defCopyofKey = (char*)malloc(strlen(current->key) + 1);
     if (defCopyofKey == NULL)
     {
@@ -89,6 +89,8 @@ SymTable_T SymTable_expand(SymTable_T oSymTable)
   SymTable_free(oSymTable);
   return newSymTable;
 }
+
+*/
 
 SymTable_T SymTable_new(void)
 {
@@ -180,7 +182,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
  
   index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
 
-  /* expansion check */
+  /* expansion check 
   if (oSymTable->numOfBuckets < index)
   {
     if (index > 65521)
@@ -188,7 +190,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
       return 0;
     }	
     oSymTable = SymTable_expand(oSymTable);
-  }
+  } */
 
   current = oSymTable->buckets[index];    
   while (current != NULL)
