@@ -336,45 +336,34 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
   assert(oSymTable != NULL);
   assert(pcKey != NULL);
 
- /* create defensive copy */
- defCopyofKey = (char*)malloc(strlen(pcKey) + 1);
- if (defCopyofKey == NULL)
- {
-   return 0;
- }
- strcpy(defCopyofKey, pcKey);
+  index = SymTable_hash(pcKey, oSymTable->numOfBuckets);
+  current = oSymTable->buckets[index];
 
- index = SymTable_hash(defCopyofKey, oSymTable-> numOfBuckets);
- current = oSymTable->buckets[index];
+  if(current == NULL)
+  {
+    return 0;
+  }
 
- if(current == NULL)
- {
-   free(defCopyofKey);
-   return 0;
- }
+  /* Base Case: if SymTable_T structure has only one SymTableNode */
+  if(strcmp(current->key, pcKey) == 0)
+  {
+    holdVal = current->value;
+    forward = current->next;
+    free((void*) current->key);
+    free(current);
+    oSymTable->buckets[index] = forward;
+    oSymTable->length--;
+    return (void*) holdVal;
+  }
 
- 
- /* Base Case: if SymTable_T structure has only one SymTableNode */
- if(strcmp(current->key, defCopyofKey) == 0)
- {
-   free(defCopyofKey);
-   holdVal = current->value;
-   forward = current->next;
-   free((void*) current->key);
-   free(current);
-   oSymTable->buckets[index] = forward;
-   oSymTable->length--;
-   return (void*) holdVal;
- }
-
- previous = oSymTable->buckets[index];
+  previous = oSymTable->buckets[index];
  
  /* If a binding in the SymTable_T structure has a key that matches pcKey,
  the SymTableNode is removed from the SymTable strucutre and the binding's value is returned.
  Otherwise, NULL is returned. */
  while (current != NULL)
  {
-   if(strcmp(current->key, defCopyofKey) == 0)
+   if(strcmp(current->key, pcKey) == 0)
    {
      free(defCopyofKey);
      holdVal = current->value;
@@ -390,7 +379,6 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
    current = forward;
  }
 
- free(defCopyofKey);
  return NULL;
 
 }
