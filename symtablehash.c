@@ -49,7 +49,7 @@ SymTable_T SymTable_new(void)
   SymTable_T oSymTable;
   size_t i;
   
-  oSymTable = (SymTable_T)malloc(sizeof(struct SymTable));
+  oSymTable = (SymTable_T)calloc(sizeof(struct SymTable));
   if (oSymTable == NULL)
   {
     return NULL;
@@ -57,7 +57,7 @@ SymTable_T SymTable_new(void)
 
   oSymTable->length = 0;
   oSymTable->numOfBuckets = 509;
-  oSymTable->buckets = (SymTable_Node**)malloc(sizeof(SymTable_Node**) * numOfBuckets);
+  oSymTable->buckets = calloc(sizeof(struct SymTable_Node*) * numOfBuckets);
   if (oSymTable->buckets == NULL)
   {
     free(oSymTable);
@@ -77,18 +77,18 @@ void SymTable_free(SymTable_T oSymTable)
   struct SymTable_Node *current;
   struct SymTable_Node *forward;
   size_t i;
+  size_t j;
 
   assert(oSymTable != NULL);
 
   for (i = 0; i < oSymTable->numOfBuckets; i++)
   {
-    for (current = oSymTable->buckets[i]->first;
-	 current != NULL;
-	 current = forward)
+    current = oSymTable->buckets[i]
+    for (j = 0; current != NULL; j++)
     {
-      current = current->next;
-      free((void*) current->key);
-      free(current);
+     current = current[j];
+     free((void*) current->key);
+     free(current);
     }
   }
 
@@ -154,12 +154,12 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   /* expansion */
   if (index % 509 > 0)
   {
-    oSymTable->numOfBuckets = oSymTable-> numOfBuckets * 2;
-    if (numOfBuckets > 65521)
+    oSymTable->numOfBuckets = oSymTable->numOfBuckets * 2;
+    if (oSymTable->numOfBuckets > 65521)
     {
       return 0;
     }
-    oSymTable->buckets = (SymTable_Node**)malloc(sizeof(SymTable_Node*) * numOfBuckets);
+    oSymTable->buckets = (SymTable_Node**)malloc(sizeof(SymTable_Node**) * numOfBuckets);
   }
 }
 
@@ -243,7 +243,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
   void *foundVal;
   size_t index;
   
-  assert(oSymTable != NULL):
+  assert(oSymTable != NULL);
   assert(pcKey != NULL);
 
   /* create defensive copy */
