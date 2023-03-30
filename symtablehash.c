@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "symtable.h"
 
+/* array holds all sizes of buckets  */
 static const size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 32749, 65521}; 
 
 /* Each key-value binding pair is stored in a Binding structure.
@@ -106,7 +107,7 @@ SymTable_T SymTable_new(void)
   }
 
   oSymTable->length = 0;
-  oSymTable->numOfBuckets = 509;
+  oSymTable->numOfBuckets = auBucketCounts[0];
   oSymTable->buckets = calloc(oSymTable->numOfBuckets, sizeof(struct SymTable_Node*));
   if (oSymTable->buckets == NULL)
   {
@@ -157,7 +158,6 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
 {
   struct SymTable_Node *current;
   struct SymTable_Node *forward;
-  struct SymTable_Node *end;
   struct SymTable_Node *newNode;
   char *defCopyofKey;
   size_t index;
@@ -203,7 +203,6 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
       return 0;
     }
     forward = current->next;
-    end = current;
     current = forward;
   }
   
