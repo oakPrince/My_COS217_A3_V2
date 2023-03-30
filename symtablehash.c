@@ -304,6 +304,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
     if(strcmp(current->key, pcKey) == 0)
     {
       foundVal = current->value;
+      free(current);
       return foundVal;
     }
     forward = current->next;
