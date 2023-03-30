@@ -185,13 +185,13 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
 
   for (i = 0; i < oSymTable->numOfBuckets; i++)
   {
-    if (i = index)
+    if (i == index)
     {
-      numOfBuckets += 0;
+      oSymTable->numOfBuckets += 0;
     }
     else
     {
-      numOfBuckets++;
+      oSymTable->numOfBuckets++;
     }
   }
 
