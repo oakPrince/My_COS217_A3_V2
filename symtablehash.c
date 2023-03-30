@@ -182,12 +182,12 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
   }
   strcpy(defCopyofKey, pcKey);
 
-  index = SymTable_hash(defCopyofKey, numOfBuckets);
+  index = SymTable_hash(defCopyofKey,oSymTable-> numOfBuckets);
   for (current = oSymTable->buckets[index]->first;
        current != NULL;
        current = forward)
   {
-    if(strcmp(current->key, defCopyofKey));
+    if(strcmp(current->key, defCopyofKey))
     {
       free(defCopyofKey);
       oldVal = current->value;
@@ -208,7 +208,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
   char *defCopyofKey;
   size_t index;
   
-  assert(oSymTable != NULL):
+  assert(oSymTable != NULL);
   assert(pcKey != NULL);
 
   /* create defensive copy */
@@ -219,7 +219,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
   }
   strcpy(defCopyofKey, pcKey);
 
-  index = SymTable_hash(defCopyofKey, numOfBuckets);
+  index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
   for (current = oSymTable->buckets[index]->first;
        current != NULL;
        current = forward)
@@ -254,7 +254,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
   }
   strcpy(defCopyofKey, pcKey);
 
-  index = SymTable_hash(defCopyofKey, numOfBuckets);
+  index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
   for (current = oSymTable->buckets[index]->first;
        current != NULL;
        current = forward)
@@ -291,7 +291,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
  }
  strcpy(defCopyofKey, pcKey);
 
- index = SymTable_hash(defCopyofKey, numOfBuckets);
+ index = SymTable_hash(defCopyofKey, oSymTable-> numOfBuckets);
  
  /* Base Case: if SymTable_T structure has only one SymTableNode */
  if(strcmp(oSymTable->buckets[index]->first->key, defCopyofKey) == 0)
@@ -342,7 +342,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey)
    {
      return 0;
    }
-   oSymTable->buckets = (SymTable_Node**)malloc(sizeof(SymTable_Node*) * numOfBuckets);
+   oSymTable->buckets = (SymTable_Node**)malloc(sizeof(SymTable_Node**) * numOfBuckets);
  }
 }
 
