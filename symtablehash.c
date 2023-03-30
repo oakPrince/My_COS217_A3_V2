@@ -106,7 +106,7 @@ SymTable_T SymTable_new(void)
   }
 
   oSymTable->length = 0;
-  oSymTable->numOfBuckets = sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);
+  oSymTable->numOfBuckets = 509;
   oSymTable->buckets = calloc(oSymTable->numOfBuckets, sizeof(struct SymTable_Node*));
   if (oSymTable->buckets == NULL)
   {
