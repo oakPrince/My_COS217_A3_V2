@@ -25,7 +25,7 @@ struct SymTable
   /* struct Binding begins hash table */
   struct SymTable_Node **buckets;
   /* Number of buckets in the Symtable  */
-  size_t numOfBuckets = 509;
+  size_t numOfBuckets;
 };
 
 /* Return a hash code for pcKey that is between 0 and uBucketCount-1,
@@ -56,7 +56,8 @@ SymTable_T SymTable_new(void)
   }
 
   oSymTable->length = 0;
-  oSymTable->buckets = (SymTable_Node*)malloc(sizeof(SymTable_Node*) * numOfBuckets);
+  oSymTable->numOfBuckets = 509;
+  oSymTable->buckets = (SymTable_Node**)malloc(sizeof(SymTable_Node*) * numOfBuckets);
   if (oSymTable->buckets == NULL)
   {
     free(oSymTable);
@@ -130,7 +131,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   }
   strcpy(defCopyofKey, pcKey);
  
-  index = SymTable_hash(defCopyofKey, numOfBuckets);
+  index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
   for (current = oSymTable->buckets[index]->first;
        current != NULL;
        current = forward)
@@ -169,7 +170,7 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
   char *defCopyofKey;
   size_t index;
   
-  assert(assert(oSymTable != NULL):
+  assert(oSymTable != NULL);
   assert(pcKey != NULL);
 
   /* create defensive copy */
