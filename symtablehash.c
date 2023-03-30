@@ -283,8 +283,8 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey)
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
 {
-  struct Binding *current;
-  struct Binding *forward;
+  struct SymTable_Node *current;
+  struct SymTable_Node *forward;
   char *defCopyofKey;
   void *foundVal;
   size_t index;
@@ -301,9 +301,8 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
   strcpy(defCopyofKey, pcKey);
 
   index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
-  for (current = oSymTable->buckets[index]->first;
-       current != NULL;
-       current = forward)
+  current = oSymTable->buckets[index];
+  while (current != NULL)
   {
     if(strcmp(current->key, defCopyofKey) == 0)
     {
@@ -312,6 +311,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey)
       return foundVal;
     }
     forward = current->next;
+    current = forward;
   }
   return NULL;
 
