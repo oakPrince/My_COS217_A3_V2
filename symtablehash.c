@@ -159,6 +159,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   struct SymTable_Node *newNode;
   char *defCopyofKey;
   size_t index;
+  size_t i;
 
   
   assert(oSymTable != NULL);
@@ -181,6 +182,18 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue)
   strcpy(defCopyofKey, pcKey);
  
   index = SymTable_hash(defCopyofKey, oSymTable->numOfBuckets);
+
+  for (i = 0; i < oSymTable->numOfBuckets; i++)
+  {
+    if (i = index)
+    {
+      numOfBuckets += 0;
+    }
+    else
+    {
+      numOfBuckets++;
+    }
+  }
 
   /* expansion check 
   if (oSymTable->numOfBuckets < index)
